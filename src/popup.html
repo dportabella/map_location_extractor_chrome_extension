@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Page locations</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1 class="app-title">Page locations & routes</h1>
+    </header>
+    <main class="app-main">
+      <section id="status" class="status status--info">Collecting locations…</section>
+
+      <section class="toolbar">
+        <button type="button" id="copy-all-locations" class="toolbar-button">
+          Copy all locations
+        </button>
+        <button type="button" id="copy-all-routes" class="toolbar-button">
+          Copy all routes
+        </button>
+        <label class="toolbar-toggle">
+          <input type="checkbox" id="toggle-debug" />
+          <span>Debug mode</span>
+        </label>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title">Locations</h2>
+        <ul id="locations-list" class="locations-list"></ul>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title">Detected routes</h2>
+        <ul id="routes-list" class="routes-list"></ul>
+      </section>
+    </main>
+    <template id="location-item-template">
+      <li class="location-item">
+        <div class="location-main">
+          <div class="location-description"></div>
+          <div class="location-coords"></div>
+          <div class="location-debug"></div>
+        </div>
+        <div class="location-actions">
+          <a class="location-link" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+          <button type="button" class="location-copy">Copy link</button>
+        </div>
+      </li>
+    </template>
+
+    <template id="route-item-template">
+      <li class="route-item">
+        <div class="route-main">
+          <div class="route-description"></div>
+          <div class="route-meta"></div>
+        </div>
+        <div class="route-actions">
+          <a class="route-link" target="_blank" rel="noopener noreferrer">Download route</a>
+          <button type="button" class="route-copy">Copy link</button>
+        </div>
+      </li>
+    </template>
+    <script src="popup.js"></script>
+  </body>
+</html>
+

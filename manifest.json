@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Map Location & Route Extractor",
+  "description": "Extract Google Maps, Street View and OpenStreetMap locations from any page and turn them into reusable map links.",
+  "version": "1.0.0",
+  "author": "David Portabella <david.portabella@gmail.com>",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "action": {
+    "default_title": "Page locations",
+    "default_popup": "src/popup.html"
+  },
+  "icons": {
+    "16": "src/icon16.png",
+    "48": "src/icon48.png",
+    "128": "src/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "src/extractor-core.js",
+        "src/content-script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

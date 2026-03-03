@@ -1,0 +1,13 @@
+{
+  "name": "map-location-extractor-chrome-extension",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "vitest run",
+    "build:zip": "rm -f map_location_extractor_chrome_extension.zip && zip -r map_location_extractor_chrome_extension.zip manifest.json src README.md DESCRIPTION.md"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "vitest": "^3.2.0"
+  }
+}
