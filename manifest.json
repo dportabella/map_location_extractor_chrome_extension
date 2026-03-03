@@ -5,10 +5,8 @@
   "version": "1.0.0",
   "author": "David Portabella <david.portabella@gmail.com>",
   "permissions": [
-    "activeTab"
-  ],
-  "host_permissions": [
-    "*://*/*"
+    "activeTab",
+    "scripting"
   ],
   "action": {
     "default_title": "Page locations",
@@ -18,17 +16,5 @@
     "16": "src/icon16.png",
     "48": "src/icon48.png",
     "128": "src/icon128.png"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*/*"
-      ],
-      "js": [
-        "src/extractor-core.js",
-        "src/content-script.js"
-      ],
-      "run_at": "document_idle"
-    }
-  ]
+  }
 }

@@ -55,8 +55,8 @@ This extension is designed with privacy in mind:
 
 Permissions used:
 
-- `activeTab`: needed to read the content of the tab when you click the extension icon.
-- `*://*/*` host permissions (via content scripts): required so the extension can see embedded maps and links on any website.
+- `activeTab`: needed to read the content of the tab when you click the extension icon. It identifies maps, coordinates and route links on the exact page you are looking at.
+- `scripting`: instead of running background content scripts continuously, the extension dynamically injects its parser scripts via the `scripting` API only when you explicitly click the extension action button. This ensures maximum privacy by reading only your intended tab.
 
 If you inspect the source code, you will see that:
 

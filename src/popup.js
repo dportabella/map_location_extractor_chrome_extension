@@ -123,7 +123,7 @@
           if (!navigator.clipboard || !navigator.clipboard.writeText) {
             return;
           }
-          navigator.clipboard.writeText(mapsUrl).catch(() => {});
+          navigator.clipboard.writeText(mapsUrl).catch(() => { });
         });
       }
 
@@ -198,7 +198,7 @@
           if (!navigator.clipboard || !navigator.clipboard.writeText) {
             return;
           }
-          navigator.clipboard.writeText(url).catch(() => {});
+          navigator.clipboard.writeText(url).catch(() => { });
         });
       }
 
@@ -213,7 +213,9 @@
       setStatus("Cannot access active tab.", "error");
       return;
     }
+
     setStatus("Collecting locations…", "info");
+
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (!Array.isArray(tabs) || tabs.length === 0) {
         setStatus("Cannot identify the active tab.", "error");
@@ -224,32 +226,52 @@
         setStatus("Cannot identify the active tab.", "error");
         return;
       }
-      chrome.tabs.sendMessage(activeTab.id, { type: "collectLocations" }, (response) => {
-        if (chrome.runtime.lastError) {
-          setStatus("No content script in this page or it did not respond.", "error");
-          clearList();
-          clearRoutesList();
-          lastLocations = [];
-          lastRoutes = [];
-          return;
+
+      // 1. Inject the scripts dynamically since we removed broad host permissions
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: activeTab.id },
+          files: ["src/extractor-core.js", "src/content-script.js"]
+        },
+        () => {
+          if (chrome.runtime.lastError) {
+            setStatus("This page cannot be read by extensions (e.g. Chrome Web Store).", "error");
+            clearList();
+            clearRoutesList();
+            lastLocations = [];
+            lastRoutes = [];
+            return;
+          }
+
+          // 2. Once injected, send the message to collect locations
+          chrome.tabs.sendMessage(activeTab.id, { type: "collectLocations" }, (response) => {
+            if (chrome.runtime.lastError) {
+              setStatus("No content script in this page or it did not respond.", "error");
+              clearList();
+              clearRoutesList();
+              lastLocations = [];
+              lastRoutes = [];
+              return;
+            }
+            if (!response || !Array.isArray(response.locations)) {
+              setStatus("No locations returned by the page.", "info");
+              clearList();
+              clearRoutesList();
+              lastLocations = [];
+              lastRoutes = [];
+              return;
+            }
+            const routes = Array.isArray(response.routes) ? response.routes : [];
+            lastLocations = response.locations;
+            lastRoutes = routes;
+            renderLocations(lastLocations);
+            renderRoutes(lastRoutes);
+            if (lastLocations.length === 0 && lastRoutes.length > 0) {
+              setStatus("No locations found, but downloadable routes were detected.", "info");
+            }
+          });
         }
-        if (!response || !Array.isArray(response.locations)) {
-          setStatus("No locations returned by the page.", "info");
-          clearList();
-          clearRoutesList();
-          lastLocations = [];
-          lastRoutes = [];
-          return;
-        }
-        const routes = Array.isArray(response.routes) ? response.routes : [];
-        lastLocations = response.locations;
-        lastRoutes = routes;
-        renderLocations(lastLocations);
-        renderRoutes(lastRoutes);
-        if (lastLocations.length === 0 && lastRoutes.length > 0) {
-          setStatus("No locations found, but downloadable routes were detected.", "info");
-        }
-      });
+      );
     });
   }
 
@@ -280,7 +302,7 @@
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
       return;
     }
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard.writeText(text).catch(() => { });
   }
 
   function copyAllRoutes() {
@@ -311,7 +333,7 @@
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
       return;
     }
-    navigator.clipboard.writeText(text).catch(() => {});
+    navigator.clipboard.writeText(text).catch(() => { });
   }
 
   function attachToolbarHandlers() {
